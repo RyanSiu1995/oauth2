@@ -46,6 +46,7 @@ defmodule OAuth2.Client do
   @type token         :: AccessToken.t | nil
   @type token_method  :: :post | :get | atom
   @type token_url     :: binary
+  @type response_handler :: (any -> boolean)
 
   @type t :: %Client{
     authorize_url: authorize_url,
@@ -395,6 +396,12 @@ defmodule OAuth2.Client do
   def delete!(%Client{} = client, url, body \\ "", headers \\ [], opts \\ []),
     do: Request.request!(:delete, client, url, body, headers, opts)
 
+  @doc """
+  Same as introspect/3 but without response handler
+  """
+  @spec introspect(t, token) :: true | false
+  def introspect(%Client{} = client, token),
+    do: introspect(client, token, nil)
 
   @doc """
   Make a call to verify the token given by the caller based on 

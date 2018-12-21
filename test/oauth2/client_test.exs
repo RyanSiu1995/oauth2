@@ -325,4 +325,36 @@ defmodule OAuth2.ClientTest do
 
     Bypass.up(server)
   end
+
+
+  test "introspection success", %{server: server, client: client} do
+    token = "token"
+
+    bypass server, "POST", "/api/introspection", [token: token], fn conn ->
+      json(conn, 200, %{})
+    end
+
+    assert Client.introspect(client, token)
+  end
+
+  test "introspection failed", %{server: server, client: client} do
+    token = "token"
+
+    bypass server, "POST", "/api/introspection", [token: token], fn conn ->
+      json(conn, 403, %{})
+    end
+
+    assert !Client.introspect(client, token)
+  end
+
+  test "introspection with custom function success", %{server: server, client: client} do
+    token = "token"
+
+    bypass server, "POST", "/api/introspection", [token: token], fn conn ->
+      json(conn, 200, %{"role": "admin"})
+    end
+
+    assert Client.introspect(client, token, fn body -> body["role"] == "admin" end)
+  end
+
 end
