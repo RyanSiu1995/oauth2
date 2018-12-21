@@ -395,6 +395,17 @@ defmodule OAuth2.Client do
   def delete!(%Client{} = client, url, body \\ "", headers \\ [], opts \\ []),
     do: Request.request!(:delete, client, url, body, headers, opts)
 
+
+  @doc """
+  Make a call to verify the token given by the caller based on 
+  OAuth2 introspection spec.
+  """
+  @spec introspect(t, token, response_handler) :: true | false
+  def introspect(%Client{} = client, token, handler) do
+    # TODO execute the call to introspect endpoint
+    # TODO handle the response and custom handler
+  end
+
   defp to_url(%Client{token_method: :post} = client, :token_url) do
     {client, endpoint(client, client.token_url)}
   end
